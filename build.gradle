@@ -1,0 +1,143 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.collabboard'
+version = '1.0.0'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // No external dependencies needed for basic RMI functionality
+    // Add if needed for advanced features:
+    // implementation 'com.google.code.gson:gson:2.8.9'
+    // implementation 'org.apache.commons:commons-lang3:3.12.0'
+    
+    // Testing dependencies
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:4.6.1'
+}
+
+application {
+    mainClass = 'com.collabboard.server.RMIServer'
+}
+
+// Task to run the server
+task runServer(type: JavaExec) {
+    group = 'application'
+    description = 'Run the CollabBoard RMI Server'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.collabboard.server.RMIServer'
+}
+
+// Task to run the client
+task runClient(type: JavaExec) {
+    group = 'application'
+    description = 'Run the CollabBoard RMI Client'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.collabboard.client.RMIClient'
+    
+    // Allow passing server host as system property
+    systemProperty 'server.host', System.getProperty('server.host', 'localhost')
+}
+
+// Task to start RMI registry
+task startRegistry(type: Exec) {
+    group = 'application'
+    description = 'Start RMI Registry'
+    
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+        commandLine 'cmd', '/c', 'start', 'rmiregistry', '1099'
+    } else {
+        commandLine 'rmiregistry', '1099'
+    }
+}
+
+// Task to compile RMI stubs (if needed for older Java versions)
+task compileRMI {
+    group = 'build'
+    description = 'Compile RMI stubs and skeletons'
+    dependsOn classes
+    
+    doLast {
+        // For Java 8+, dynamic stubs are used, so this is mainly for compatibility
+        println "RMI compilation completed (using dynamic stubs)"
+    }
+}
+
+// Create directories for file storage
+task createDirectories {
+    group = 'build'
+    description = 'Create necessary directories'
+    
+    doLast {
+        mkdir 'files'
+        mkdir 'whiteboards'
+        mkdir 'logs'
+        mkdir 'security'
+    }
+}
+
+// Custom JAR task for server
+task serverJar(type: Jar) {
+    group = 'build'
+    description = 'Create JAR for server'
+    archiveBaseName = 'collabboard-server'
+    
+    from sourceSets.main.output
+    
+    manifest {
+        attributes(
+            'Main-Class': 'com.collabboard.server.RMIServer',
+            'Implementation-Title': 'CollabBoard Server',
+            'Implementation-Version': project.version
+        )
+    }
+}
+
+// Custom JAR task for client
+task clientJar(type: Jar) {
+    group = 'build'
+    description = 'Create JAR for client'
+    archiveBaseName = 'collabboard-client'
+    
+    from sourceSets.main.output
+    
+    manifest {
+        attributes(
+            'Main-Class': 'com.collabboard.client.RMIClient',
+            'Implementation-Title': 'CollabBoard Client',
+            'Implementation-Version': project.version
+        )
+    }
+}
+
+// Build both JARs
+task buildJars {
+    group = 'build'
+    description = 'Build both server and client JARs'
+    dependsOn serverJar, clientJar
+}
+
+// Ensure directories are created before running
+runServer.dependsOn createDirectories
+runClient.dependsOn createDirectories
+
+// Java compilation options
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xlint:unchecked', '-Xlint:deprecation']
+}
+
+// Test configuration
+test {
+    useJUnit()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
