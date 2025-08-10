@@ -86,7 +86,7 @@ CollabBoard/
    - Mac/Linux: `ifconfig`
 3. **Client**: Edit "CollabBoard Client (Remote)" launch config
    - **Run Configurations** → **Arguments** tab
-   - Change **Program Arguments** to server IP (e.g., `192.168.1.100`)
+   - Change **Program Arguments** to server IP (e.g., `192.168.100.28`)
 4. **Run** the remote client configuration
 
 ## 🐛 Troubleshooting

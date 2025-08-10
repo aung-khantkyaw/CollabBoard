@@ -366,6 +366,15 @@ public class FileSharePanel extends JPanel {
      */
     public void addSharedFile(FileTransfer fileMetadata) {
         SwingUtilities.invokeLater(() -> {
+            // Check if file already exists in our list (prevent duplicates)
+            String newFileId = fileMetadata.getFileId();
+            for (FileTransfer existingFile : fileList) {
+                if (existingFile.getFileId() != null && existingFile.getFileId().equals(newFileId)) {
+                    // File already exists, don't add duplicate
+                    return;
+                }
+            }
+            
             // Add to our tracked list
             fileList.add(fileMetadata);
             

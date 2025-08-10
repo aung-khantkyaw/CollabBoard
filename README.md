@@ -110,12 +110,12 @@ gradle runServer
 gradle runClient
 
 # Connect from different devices to server IP
-gradle runClient -Dserver.host=192.168.1.100
+gradle runClient -Dserver.host=192.168.100.28
 
 # Example: Connect from multiple devices
-# Device 1 (Windows): gradle runClient -Dserver.host=192.168.1.100
-# Device 2 (Mac): gradle runClient -Dserver.host=192.168.1.100  
-# Device 3 (Linux): gradle runClient -Dserver.host=192.168.1.100
+# Device 1 (Windows): gradle runClient -Dserver.host=192.168.100.28
+# Device 2 (Mac): gradle runClient -Dserver.host=192.168.100.28  
+# Device 3 (Linux): gradle runClient -Dserver.host=192.168.100.28
 ```
 
 **🌐 Multi-Device Collaboration:** 
@@ -202,7 +202,7 @@ The server should be accessible from other devices on the network:
 ```bash
 # Edit config.properties to allow external connections
 # Change from localhost to actual IP address
-server.host=192.168.1.100    # Replace with your server's IP
+server.host=192.168.100.28    # Replace with your server's IP
 server.port=1099
 ```
 
@@ -236,23 +236,23 @@ ip addr show
 
 **From Windows Client:**
 ```bash
-gradle runClient -Dserver.host=192.168.1.100
+gradle runClient -Dserver.host=192.168.100.28
 ```
 
 **From Mac Client:**
 ```bash
-gradle runClient -Dserver.host=192.168.1.100
+gradle runClient -Dserver.host=192.168.100.28
 ```
 
 **From Linux Client:**
 ```bash
-gradle runClient -Dserver.host=192.168.1.100
+gradle runClient -Dserver.host=192.168.100.28
 ```
 
 ### Real-World Deployment Scenarios
 
 #### 🏢 **Office/Classroom Setup**
-- **Server**: Teacher's/presenter's computer (192.168.1.100)
+- **Server**: Teacher's/presenter's computer (192.168.100.28)
 - **Clients**: Student computers (Windows/Mac/Linux mixed)
 - **Usage**: Collaborative drawing, shared presentations
 
@@ -272,10 +272,10 @@ Test connectivity before running the full application:
 
 ```bash
 # Test if server is reachable
-telnet 192.168.1.100 1099
+telnet 192.168.100.28 1099
 
 # Or use ping
-ping 192.168.1.100
+ping 192.168.100.28
 ```
 
 ## Usage Guide

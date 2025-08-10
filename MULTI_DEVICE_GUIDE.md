@@ -39,7 +39,7 @@ ipconfig
 
 # Mac/Linux  
 ifconfig
-# Example output: 192.168.1.100
+# Example output: 192.168.100.28
 ```
 
 ### Step 2: Connect Clients (All Other Devices)
@@ -48,10 +48,10 @@ From any other device on the same network:
 
 ```bash
 # Connect to the server
-gradle runClient -Dserver.host=192.168.1.100
+gradle runClient -Dserver.host=192.168.100.28
 
 # Alternative: Pass as command line argument
-java -cp build/classes/main com.collabboard.client.RMIClient 192.168.1.100
+java -cp build/classes/main com.collabboard.client.RMIClient 192.168.100.28
 ```
 
 ## 🏗️ Network Configuration
@@ -66,7 +66,7 @@ java -cp build/classes/main com.collabboard.client.RMIClient 192.168.1.100
 **Client Connection:**
 ```bash
 # All clients use the same server IP
-gradle runClient -Dserver.host=192.168.1.100
+gradle runClient -Dserver.host=192.168.100.28
 ```
 
 ### For Internet Deployment (Remote Users)
@@ -111,11 +111,11 @@ sudo firewall-cmd --reload
 
 ### 🏫 Classroom/Training
 ```
-Teacher's Computer (Server): 192.168.1.100
-├── Student Laptop 1: gradle runClient -Dserver.host=192.168.1.100
-├── Student Laptop 2: gradle runClient -Dserver.host=192.168.1.100  
-├── Student Laptop 3: gradle runClient -Dserver.host=192.168.1.100
-└── Projector Display: gradle runClient -Dserver.host=192.168.1.100
+Teacher's Computer (Server): 192.168.100.28
+├── Student Laptop 1: gradle runClient -Dserver.host=192.168.100.28
+├── Student Laptop 2: gradle runClient -Dserver.host=192.168.100.28  
+├── Student Laptop 3: gradle runClient -Dserver.host=192.168.100.28
+└── Projector Display: gradle runClient -Dserver.host=192.168.100.28
 ```
 
 ### 🏢 Business Meeting
@@ -148,21 +148,21 @@ Home Desktop (Server): 192.168.1.15
 2. **Test Network Connectivity:**
    ```bash
    # From client device, test if server is reachable
-   telnet 192.168.1.100 1099
+   telnet 192.168.100.28 1099
    # or
-   ping 192.168.1.100
+   ping 192.168.100.28
    ```
 
 3. **Connect First Client:**
    ```bash
-   gradle runClient -Dserver.host=192.168.1.100
+   gradle runClient -Dserver.host=192.168.100.28
    # Should show connection success and open GUI
    ```
 
 4. **Connect Second Client:**
    ```bash
    # From different device
-   gradle runClient -Dserver.host=192.168.1.100
+   gradle runClient -Dserver.host=192.168.100.28
    # Should see both users in user list
    ```
 
