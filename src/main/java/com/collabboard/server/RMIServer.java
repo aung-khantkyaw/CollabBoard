@@ -7,6 +7,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Properties;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * Main RMI Server class that starts all services and binds them to the registry
@@ -147,7 +148,31 @@ public class RMIServer {
      */
     public static void main(String[] args) {
         // Set system properties for RMI
-        System.setProperty("java.rmi.server.hostname", "localhost");
+        String hostname = "localhost"; // Default
+        
+        // Check if hostname/IP is provided as argument
+        if (args.length > 0 && !args[0].trim().isEmpty()) {
+            hostname = args[0].trim();
+            System.out.println("Using provided hostname: " + hostname);
+        } else {
+            // Try to get the actual IP address
+            try {
+                java.net.InetAddress localHost = java.net.InetAddress.getLocalHost();
+                String localIP = localHost.getHostAddress();
+                if (!localIP.equals("127.0.0.1")) {
+                    hostname = localIP;
+                    System.out.println("Auto-detected hostname: " + hostname);
+                } else {
+                    System.out.println("Using default hostname: " + hostname);
+                }
+            } catch (Exception e) {
+                System.out.println("Could not detect IP, using default hostname: " + hostname);
+            }
+        }
+        
+        System.setProperty("java.rmi.server.hostname", hostname);
+        System.setProperty("java.rmi.server.useLocalHostname", "false");
+        System.out.println("RMI server hostname set to: " + hostname);
         
         // Create and start server
         RMIServer server = new RMIServer();

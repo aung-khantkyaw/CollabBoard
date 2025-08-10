@@ -11,6 +11,4 @@
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.collabboard.server.RMIServer"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="CollabBoard"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="CollabBoard"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="192.168.100.28"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djava.rmi.server.hostname=192.168.100.28"/>
 </launchConfiguration>
