@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 
 /**
  * Main RMI Server class that starts all services and binds them to the registry
@@ -155,18 +156,45 @@ public class RMIServer {
             hostname = args[0].trim();
             System.out.println("Using provided hostname: " + hostname);
         } else {
-            // Try to get the actual IP address
+            // Try to get the actual network IP address (Linux-compatible)
             try {
-                java.net.InetAddress localHost = java.net.InetAddress.getLocalHost();
-                String localIP = localHost.getHostAddress();
-                if (!localIP.equals("127.0.0.1")) {
-                    hostname = localIP;
-                    System.out.println("Auto-detected hostname: " + hostname);
+                // Method 1: Try to get non-loopback network interface
+                java.net.NetworkInterface.getNetworkInterfaces().asIterator().forEachRemaining(ni -> {
+                    try {
+                        if (!ni.isLoopback() && ni.isUp()) {
+                            ni.getInetAddresses().asIterator().forEachRemaining(addr -> {
+                                if (!addr.isLoopbackAddress() && !addr.isLinkLocalAddress() && 
+                                    addr instanceof java.net.Inet4Address) {
+                                    String ip = addr.getHostAddress();
+                                    System.setProperty("detected.ip", ip);
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        // Continue to next interface
+                    }
+                });
+                
+                String detectedIP = System.getProperty("detected.ip");
+                if (detectedIP != null && !detectedIP.isEmpty()) {
+                    hostname = detectedIP;
+                    System.out.println("Auto-detected network IP: " + hostname);
                 } else {
-                    System.out.println("Using default hostname: " + hostname);
+                    // Fallback: Use InetAddress.getLocalHost()
+                    java.net.InetAddress localHost = java.net.InetAddress.getLocalHost();
+                    String localIP = localHost.getHostAddress();
+                    if (!localIP.equals("127.0.0.1") && !localIP.equals("127.0.1.1")) {
+                        hostname = localIP;
+                        System.out.println("Auto-detected hostname: " + hostname);
+                    } else {
+                        System.out.println("Warning: Only loopback address detected. Consider providing IP as argument.");
+                        System.out.println("Usage: java RMIServer <your-network-ip>");
+                        System.out.println("Using default hostname: " + hostname);
+                    }
                 }
             } catch (Exception e) {
                 System.out.println("Could not detect IP, using default hostname: " + hostname);
+                System.out.println("Error: " + e.getMessage());
             }
         }
         
